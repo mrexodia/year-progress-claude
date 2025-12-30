@@ -578,11 +578,13 @@ function openSettings() {
 }
 
 function closeSettings() {
-  // Save emoji customization
+  // Save emoji customization (clean up spaces and duplicates)
   const emojiInput = document.getElementById('emojiInput');
-  const newEmojis = emojiInput.value.trim();
-  if (newEmojis) {
-    state.emojis = newEmojis;
+  const rawEmojis = emojiInput.value;
+  if (rawEmojis.trim()) {
+    const segments = [...new Intl.Segmenter().segment(rawEmojis)].map(s => s.segment);
+    const unique = [...new Set(segments.filter(s => s.trim() !== ''))];
+    state.emojis = unique.join('');
   } else {
     state.emojis = DEFAULT_EMOJIS;
   }
