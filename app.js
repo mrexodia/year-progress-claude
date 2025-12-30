@@ -485,7 +485,10 @@ function renderColorPalette(selectedColor) {
 function getEmojis() {
   // Parse emojis from string (handles multi-codepoint emojis)
   const emojiString = state.emojis || DEFAULT_EMOJIS;
-  return [...new Intl.Segmenter().segment(emojiString)].map(s => s.segment);
+  const segments = [...new Intl.Segmenter().segment(emojiString)].map(s => s.segment);
+  // Remove spaces and duplicates
+  const unique = [...new Set(segments.filter(s => s.trim() !== ''))];
+  return unique;
 }
 
 function renderEmojiPicker(selectedEmoji) {
