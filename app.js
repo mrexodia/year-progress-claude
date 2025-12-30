@@ -658,16 +658,12 @@ function scrollToToday() {
   const currentYear = new Date().getFullYear();
   if (state.year !== currentYear) return;
   
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      const todayDot = document.querySelector('.day-dot.today');
-      if (todayDot) {
-        const rect = todayDot.getBoundingClientRect();
-        const scrollTop = window.scrollY + rect.top - (window.innerHeight / 2);
-        window.scrollTo(0, scrollTop);
-      }
-    });
-  });
+  const todayDot = document.querySelector('.day-dot.today');
+  if (todayDot) {
+    const rect = todayDot.getBoundingClientRect();
+    const scrollTop = window.scrollY + rect.top - (window.innerHeight / 2);
+    window.scrollTo(0, scrollTop);
+  }
 }
 
 // ===========================
@@ -686,8 +682,8 @@ function init() {
   renderGrid();
   initEventListeners();
   
-  // Scroll to current day if viewing current year
-  scrollToToday();
+  // Scroll to current day if viewing current year (after fonts load)
+  window.addEventListener('load', scrollToToday);
   
   // Register service worker
   if ('serviceWorker' in navigator) {
