@@ -292,17 +292,16 @@ body {
 .popup-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3);
-  display: flex;
+  background: transparent;
+  display: none;
   align-items: center;
   justify-content: center;
   z-index: 100;
-  visibility: hidden;
   padding: 20px;
 }
 
 .popup-overlay.active {
-  visibility: visible;
+  display: flex;
 }
 
 .popup {
