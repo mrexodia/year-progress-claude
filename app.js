@@ -232,132 +232,107 @@ function renderYearSelector() {
 // Grid Rendering
 // ===========================
 
-const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-function getMonthWeekData(year) {
-  // Calculate which week each month starts on (Monday = first day)
-  const monthData = [];
-  
-  const jan1 = new Date(year, 0, 1);
-  const startDayOfWeek = (jan1.getDay() + 6) % 7; // Monday = 0
-  
-  for (let month = 0; month < 12; month++) {
-    const firstOfMonth = new Date(year, month, 1);
-    const dayOfYear = getDayOfYear(firstOfMonth);
-    const weekOfYear = Math.floor((dayOfYear + startDayOfWeek - 1) / 7);
-    
-    const lastOfMonth = new Date(year, month + 1, 0);
-    const lastDayOfYear = getDayOfYear(lastOfMonth);
-    const lastWeekOfYear = Math.floor((lastDayOfYear + startDayOfWeek - 1) / 7);
-    
-    monthData.push({
-      name: MONTH_NAMES[month],
-      startWeek: weekOfYear,
-      weeks: lastWeekOfYear - weekOfYear + 1
-    });
-  }
-  
-  return monthData;
-}
-
-function renderMonthLabels() {
-  const labelsContainer = document.getElementById('monthLabels');
-  if (!labelsContainer) return;
-  
-  labelsContainer.innerHTML = '';
-  const monthData = getMonthWeekData(state.year);
-  
-  monthData.forEach((month, index) => {
-    const label = document.createElement('div');
-    label.className = 'month-label';
-    label.textContent = month.name;
-    label.style.setProperty('--weeks', month.weeks);
-    labelsContainer.appendChild(label);
-  });
-}
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 function renderGrid() {
   const grid = document.getElementById('yearGrid');
   const today = new Date();
   const currentDayOfYear = getDayOfYear(today);
-  const totalDays = getDaysInYear(state.year);
   
   grid.innerHTML = '';
   
-  // Calculate what day of week Jan 1 falls on (Monday = 0, Sunday = 6)
-  const jan1 = new Date(state.year, 0, 1);
-  const startDayOfWeek = (jan1.getDay() + 6) % 7; // Convert: Sun=0 -> 6, Mon=1 -> 0, etc.
-  
-  // Add empty cells to align first day correctly
-  for (let i = 0; i < startDayOfWeek; i++) {
-    const emptyDot = document.createElement('div');
-    emptyDot.className = 'day-dot';
-    emptyDot.style.visibility = 'hidden';
-    grid.appendChild(emptyDot);
+  // Render each month separately
+  for (let month = 0; month < 12; month++) {
+    const monthBlock = document.createElement('div');
+    monthBlock.className = 'month-block';
+    
+    // Month header
+    const monthHeader = document.createElement('div');
+    monthHeader.className = 'month-header';
+    monthHeader.textContent = MONTH_NAMES[month];
+    monthBlock.appendChild(monthHeader);
+    
+    // Day headers (Mon, Tue, etc.)
+    const dayHeaders = document.createElement('div');
+    dayHeaders.className = 'day-headers';
+    DAY_NAMES.forEach(day => {
+      const header = document.createElement('span');
+      header.className = 'day-header';
+      header.textContent = day;
+      dayHeaders.appendChild(header);
+    });
+    monthBlock.appendChild(dayHeaders);
+    
+    // Month grid
+    const monthGrid = document.createElement('div');
+    monthGrid.className = 'month-grid';
+    
+    // Get first day of month and how many days
+    const firstOfMonth = new Date(state.year, month, 1);
+    const startDayOfWeek = (firstOfMonth.getDay() + 6) % 7; // Monday = 0
+    const daysInMonth = new Date(state.year, month + 1, 0).getDate();
+    
+    // Add empty cells for alignment
+    for (let i = 0; i < startDayOfWeek; i++) {
+      const emptyDot = document.createElement('div');
+      emptyDot.className = 'day-dot empty';
+      monthGrid.appendChild(emptyDot);
+    }
+    
+    // Render each day of the month
+    for (let dayOfMonth = 1; dayOfMonth <= daysInMonth; dayOfMonth++) {
+      const date = new Date(state.year, month, dayOfMonth);
+      const dateKey = getDateKey(date);
+      const dayData = state.days[dateKey] || {};
+      const dayOfYear = getDayOfYear(date);
+      
+      const dot = document.createElement('button');
+      dot.className = 'day-dot';
+      dot.setAttribute('aria-label', `${formatDate(date)}`);
+      dot.dataset.date = dateKey;
+      
+      // Mark weekends (Saturday = 6, Sunday = 0)
+      const dayOfWeek = date.getDay();
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+        dot.classList.add('weekend');
+      }
+      
+      // Past, today, or future
+      if (state.year < today.getFullYear() || (state.year === today.getFullYear() && dayOfYear < currentDayOfYear)) {
+        dot.classList.add('past');
+      } else if (state.year === today.getFullYear() && dayOfYear === currentDayOfYear) {
+        dot.classList.add('today');
+        dot.classList.add('past');
+      }
+      
+      // Apply custom color if marked
+      if (dayData.color) {
+        dot.classList.add('marked');
+        dot.style.background = dayData.color;
+      }
+      
+      // Show emoji if set
+      if (dayData.emoji) {
+        dot.innerHTML = `<span class="emoji">${dayData.emoji}</span>`;
+      }
+      
+      // Show note indicator
+      if (dayData.note) {
+        const indicator = document.createElement('span');
+        indicator.className = 'note-indicator';
+        dot.appendChild(indicator);
+      }
+      
+      // Add click handler
+      dot.addEventListener('click', () => openDayPopup(dayOfYear, date, dateKey));
+      
+      monthGrid.appendChild(dot);
+    }
+    
+    monthBlock.appendChild(monthGrid);
+    grid.appendChild(monthBlock);
   }
-  
-  // Track current month for styling
-  let lastMonth = -1;
-  
-  // Render each day
-  for (let day = 1; day <= totalDays; day++) {
-    const date = getDateFromDayOfYear(state.year, day);
-    const dateKey = getDateKey(date);
-    const dayData = state.days[dateKey] || {};
-    const currentMonth = date.getMonth();
-    
-    const dot = document.createElement('button');
-    dot.className = 'day-dot';
-    dot.setAttribute('aria-label', `Day ${day}, ${formatDate(date)}`);
-    dot.dataset.day = day;
-    dot.dataset.date = dateKey;
-    
-    // Mark first day of month
-    if (currentMonth !== lastMonth) {
-      dot.classList.add('month-start');
-      lastMonth = currentMonth;
-    }
-    
-    // Mark weekends (Saturday = 6, Sunday = 0)
-    const dayOfWeek = date.getDay();
-    if (dayOfWeek === 0 || dayOfWeek === 6) {
-      dot.classList.add('weekend');
-    }
-    
-    // Past, today, or future
-    if (day < currentDayOfYear) {
-      dot.classList.add('past');
-    } else if (day === currentDayOfYear) {
-      dot.classList.add('today');
-      dot.classList.add('past');
-    }
-    
-    // Apply custom color if marked
-    if (dayData.color) {
-      dot.classList.add('marked');
-      dot.style.background = dayData.color;
-    }
-    
-    // Show emoji if set
-    if (dayData.emoji) {
-      dot.innerHTML = `<span class="emoji">${dayData.emoji}</span>`;
-    }
-    
-    // Show note indicator
-    if (dayData.note) {
-      const indicator = document.createElement('span');
-      indicator.className = 'note-indicator';
-      dot.appendChild(indicator);
-    }
-    
-    // Add click handler
-    dot.addEventListener('click', () => openDayPopup(day, date, dateKey));
-    
-    grid.appendChild(dot);
-  }
-  
-  // Render month labels
-  renderMonthLabels();
   
   // Update hint text based on context
   updateHintText();

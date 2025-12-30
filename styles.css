@@ -158,39 +158,47 @@ body {
   box-shadow: 0 4px 20px var(--shadow-color);
 }
 
-.grid-wrapper {
+/* Year Grid */
+.year-grid {
   display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Month Block */
+.month-block {
+  display: flex;
+  flex-direction: column;
   gap: 8px;
 }
 
-/* Month Labels */
-.month-labels {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  padding-top: 2px;
-  min-width: 28px;
+.month-header {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-color);
 }
 
-.month-label {
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  height: calc((44px + 6px) * var(--weeks, 4));
-  display: flex;
-  align-items: flex-start;
-  padding-top: 4px;
-}
-
-/* Year Grid */
-.year-grid {
+/* Day Headers */
+.day-headers {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 6px;
   justify-items: center;
-  flex: 1;
+}
+
+.day-header {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* Month Grid */
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  justify-items: center;
 }
 
 /* Day Dot */
@@ -210,6 +218,10 @@ body {
   font-size: 0.75rem;
   background: var(--empty-dot);
   border: 2px solid var(--empty-dot-border);
+}
+
+.day-dot.empty {
+  visibility: hidden;
 }
 
 .day-dot.past {
