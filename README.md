@@ -8,7 +8,7 @@ Someone sent me [this X post](https://x.com/CoachDanGo/status/200585561111255456
 
 > Convert the plan into beads issues and start work. Do not stop until the whole app is compeleted.
 
-After that I just tried the app and gave feedback until it was in a reasonable state. The app turned into a bit of a journal to get more interactivity. I also tried with Gemini 2.5 Pro, but it was an utter disaster.
+After that I just tried the app and gave feedback until it was in a reasonable state. The app turned into a bit of a journal to get more interactivity. I also tried with Gemini 2.5 Pro, but it was an [utter disaster](https://github.com/mrexodia/year-progress-gemini).
 
 ## Results
 
