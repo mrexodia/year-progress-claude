@@ -550,6 +550,30 @@ body {
   margin-bottom: 12px;
 }
 
+/* Emoji Input */
+.emoji-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--empty-dot-border);
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-family: inherit;
+  background: var(--bg-color);
+  color: var(--text-color);
+  letter-spacing: 2px;
+}
+
+.emoji-input:focus {
+  outline: none;
+  border-color: var(--primary-accent);
+}
+
+.settings-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
 /* Year Selector */
 .year-selector {
   display: flex;

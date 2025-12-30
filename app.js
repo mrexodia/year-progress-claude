@@ -7,6 +7,8 @@
 // Configuration
 // ===========================
 
+const DEFAULT_EMOJIS = '❤️😊⭐🎉💪🌸☀️🌙✨🌈💜🍀';
+
 const CONFIG = {
   colors: [
     '#FFB7C5', // Soft pink
@@ -18,7 +20,6 @@ const CONFIG = {
     '#FF9AA2', // Coral
     '#B5EAD7', // Sage
   ],
-  emojis: ['❤️', '😊', '⭐', '🎉', '💪', '🌸', '☀️', '🌙', '✨', '🌈', '💜', '🍀'],
   themes: {
     sakura: {
       name: 'Sakura',
@@ -47,6 +48,7 @@ let state = {
   year: new Date().getFullYear(),
   days: {},
   theme: 'sakura',
+  emojis: DEFAULT_EMOJIS,
   lastUpdated: null
 };
 
@@ -480,11 +482,17 @@ function renderColorPalette(selectedColor) {
   });
 }
 
+function getEmojis() {
+  // Parse emojis from string (handles multi-codepoint emojis)
+  const emojiString = state.emojis || DEFAULT_EMOJIS;
+  return [...new Intl.Segmenter().segment(emojiString)].map(s => s.segment);
+}
+
 function renderEmojiPicker(selectedEmoji) {
   const picker = document.getElementById('emojiPicker');
   picker.innerHTML = '';
   
-  CONFIG.emojis.forEach(emoji => {
+  getEmojis().forEach(emoji => {
     const option = document.createElement('button');
     option.className = `emoji-option ${selectedEmoji === emoji ? 'selected' : ''}`;
     option.textContent = emoji;
@@ -558,10 +566,25 @@ function updateCharCount() {
 function openSettings() {
   renderThemePicker();
   renderYearSelector();
+  
+  // Set emoji input value
+  const emojiInput = document.getElementById('emojiInput');
+  emojiInput.value = state.emojis || DEFAULT_EMOJIS;
+  
   document.getElementById('settingsOverlay').classList.add('active');
 }
 
 function closeSettings() {
+  // Save emoji customization
+  const emojiInput = document.getElementById('emojiInput');
+  const newEmojis = emojiInput.value.trim();
+  if (newEmojis) {
+    state.emojis = newEmojis;
+  } else {
+    state.emojis = DEFAULT_EMOJIS;
+  }
+  saveState();
+  
   document.getElementById('settingsOverlay').classList.remove('active');
 }
 
