@@ -15,4 +15,17 @@ After that I just tried the app and gave feedback until it was in a reasonable s
 |[Opus 4.5](https://github.com/mrexodia/year-progress-claude)|[GLM 4.7](https://github.com/mrexodia/year-progress-glm)|
 |-|-|
 |<img width="1206" height="2436" alt="image" src="https://github.com/user-attachments/assets/839344db-c785-46c2-8d00-49115b482a55" />|<img width="1206" height="2436" alt="image" src="https://github.com/user-attachments/assets/ea443472-d857-4d81-9ba0-e88de15ab184" />|
-|Cost: $15.39, [transcript](https://htmlpreview.github.io/?https://github.com/mrexodia/year-progress-claude/blob/master/session.html)|Cost: $8.34, [transcript](https://htmlpreview.github.io/?https://github.com/mrexodia/year-progress-glm/blob/master/session.html)|
+|Cost: $15.39, [transcript](https://htmlpreview.github.io/?https://github.com/mrexodia/year-progress-claude/blob/master/session.html), LLM time: 36m41s|Cost: $8.34, [transcript](https://htmlpreview.github.io/?https://github.com/mrexodia/year-progress-glm/blob/master/session.html), LLM time: 52m15s|
+
+## Key learnings
+
+- Beads
+  - Enforces a workflow of commit+push by the model, which I really do not like
+  - Claude struggled to adhere to the protocol until I reminded it
+  - GLM dutifully created commits for every task completion.
+- Both models struggled with background processes
+  - Initially both used port 8080, getting confused
+  - Previous solution: https://github.com/mrexodia/vision-server/blob/master/Makefile
+  - Project config + start/stop/status commands should work
+- This manual development loop was extremely time-consuming
+  - Probably some kind of browser-use tool could help with this
