@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#FFB7C5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Year Progress">
+  <meta name="description" content="A beautiful app to visualize your year as a grid of dots. Mark days with colors, emojis, and notes.">
+  
+  <title>Year Progress</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <h1 class="year-title"></h1>
+      <button class="settings-btn" aria-label="Settings">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Progress Stats -->
+    <div class="progress-stats">
+      <span class="days-remaining"></span>
+      <span class="separator">·</span>
+      <span class="percentage"></span>
+    </div>
+
+    <!-- Year Grid -->
+    <div class="grid-container">
+      <div class="grid-wrapper">
+        <div class="month-labels" id="monthLabels"></div>
+        <div class="year-grid" id="yearGrid"></div>
+      </div>
+    </div>
+
+    <!-- Hint text for new users -->
+    <p class="hint-text" id="hintText">Tap any day to mark it ✨</p>
+  </div>
+
+  <!-- Day Popup (hidden by default) -->
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup" id="dayPopup">
+      <div class="popup-header">
+        <span class="popup-date"></span>
+        <button class="popup-close" aria-label="Close">×</button>
+      </div>
+      <div class="popup-content">
+        <!-- Color palette -->
+        <div class="popup-section">
+          <div class="color-palette" id="colorPalette"></div>
+        </div>
+        <!-- Emoji picker -->
+        <div class="popup-section">
+          <div class="emoji-picker" id="emojiPicker"></div>
+        </div>
+        <!-- Note section -->
+        <div class="popup-section note-section">
+          <button class="add-note-btn" id="addNoteBtn">
+            <span>📝</span> Add note
+          </button>
+          <div class="note-input-container" id="noteInputContainer">
+            <textarea class="note-input" id="noteInput" placeholder="Write a note..." maxlength="280"></textarea>
+            <div class="note-actions">
+              <span class="char-count"><span id="charCount">0</span>/280</span>
+              <button class="note-save-btn" id="saveNoteBtn">Save</button>
+            </div>
+          </div>
+        </div>
+        <!-- Clear button -->
+        <button class="clear-btn" id="clearBtn">Clear marking</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Panel (hidden by default) -->
+  <div class="settings-overlay" id="settingsOverlay">
+    <div class="settings-panel" id="settingsPanel">
+      <div class="settings-header">
+        <h2>Settings</h2>
+        <button class="settings-close" aria-label="Close">×</button>
+      </div>
+      <div class="settings-content">
+        <!-- Theme picker -->
+        <div class="settings-section">
+          <h3>Theme</h3>
+          <div class="theme-picker" id="themePicker"></div>
+        </div>
+        <!-- Year selector -->
+        <div class="settings-section">
+          <h3>Year</h3>
+          <div class="year-selector" id="yearSelector"></div>
+        </div>
+        
+        <!-- Data section -->
+        <div class="settings-section">
+          <h3>Your Data</h3>
+          <button class="settings-btn-action" id="exportBtn">
+            <span>💾</span> Download Backup
+          </button>
+          <button class="settings-btn-action" id="importBtn">
+            <span>📂</span> Restore from Backup
+          </button>
+          <input type="file" id="importInput" accept=".json" style="display: none;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>
