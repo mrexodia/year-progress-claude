@@ -537,7 +537,8 @@ function selectEmoji(emoji) {
   
   saveState();
   renderGrid();
-  renderEmojiPicker(dayData.emoji);
+  // Pass undefined if no emoji selected to clear highlight
+  renderEmojiPicker(state.days[selectedDay.dateKey]?.emoji);
 }
 
 
