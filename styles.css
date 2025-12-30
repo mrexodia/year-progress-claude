@@ -432,42 +432,9 @@ body {
   padding-top: 16px;
 }
 
-.add-note-btn {
-  width: 100%;
-  padding: 12px;
-  background: var(--empty-dot);
-  border: none;
-  border-radius: 12px;
-  font-size: 1rem;
-  color: var(--text-color);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.2s ease;
-  font-family: inherit;
-}
-
-.add-note-btn:hover {
-  background: var(--primary-accent);
-}
-
-.add-note-btn.hidden {
-  display: none;
-}
-
-.note-input-container {
-  display: none;
-}
-
-.note-input-container.active {
-  display: block;
-}
-
 .note-input {
   width: 100%;
-  min-height: 80px;
+  min-height: 70px;
   padding: 12px;
   border: 2px solid var(--empty-dot-border);
   border-radius: 12px;
@@ -484,55 +451,11 @@ body {
   border-color: var(--primary-accent);
 }
 
-.note-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 8px;
-}
-
-.char-count {
-  font-size: 0.85rem;
+.note-char-count {
+  text-align: right;
+  font-size: 0.8rem;
   color: var(--text-muted);
-}
-
-.note-save-btn {
-  padding: 8px 20px;
-  background: var(--primary-accent);
-  border: none;
-  border-radius: 20px;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-color);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: inherit;
-}
-
-.note-save-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px var(--shadow-color);
-}
-
-/* Clear Button */
-.clear-btn {
-  width: 100%;
-  padding: 12px;
-  background: none;
-  border: 2px solid var(--empty-dot-border);
-  border-radius: 12px;
-  font-size: 0.95rem;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: inherit;
-  margin-top: 8px;
-}
-
-.clear-btn:hover {
-  background: var(--empty-dot);
-  border-color: var(--text-muted);
-  color: var(--text-color);
+  margin-top: 6px;
 }
 
 /* ===========================

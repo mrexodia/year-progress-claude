@@ -432,26 +432,36 @@ function openDayPopup(dayNumber, date, dateKey) {
   
   // Handle note section
   const noteInput = document.getElementById('noteInput');
-  const noteContainer = document.getElementById('noteInputContainer');
-  const addNoteBtn = document.getElementById('addNoteBtn');
-  
-  if (dayData.note) {
-    noteInput.value = dayData.note;
-    noteContainer.classList.add('active');
-    addNoteBtn.classList.add('hidden');
-    updateCharCount();
-  } else {
-    noteInput.value = '';
-    noteContainer.classList.remove('active');
-    addNoteBtn.classList.remove('hidden');
-    addNoteBtn.innerHTML = '<span>📝</span> Add note';
-  }
+  noteInput.value = dayData.note || '';
+  updateCharCount();
   
   // Show popup
   document.getElementById('popupOverlay').classList.add('active');
 }
 
 function closePopup() {
+  // Auto-save note before closing
+  if (selectedDay) {
+    const noteInput = document.getElementById('noteInput');
+    const note = noteInput.value.trim();
+    const dayData = state.days[selectedDay.dateKey] || {};
+    
+    if (note) {
+      dayData.note = note;
+    } else {
+      delete dayData.note;
+    }
+    
+    if (Object.keys(dayData).length === 0) {
+      delete state.days[selectedDay.dateKey];
+    } else {
+      state.days[selectedDay.dateKey] = dayData;
+    }
+    
+    saveState();
+    renderGrid();
+  }
+  
   document.getElementById('popupOverlay').classList.remove('active');
   selectedDay = null;
 }
@@ -530,38 +540,7 @@ function selectEmoji(emoji) {
   renderEmojiPicker(dayData.emoji);
 }
 
-function showNoteInput() {
-  document.getElementById('addNoteBtn').classList.add('hidden');
-  document.getElementById('noteInputContainer').classList.add('active');
-  document.getElementById('noteInput').focus();
-}
 
-function saveNote() {
-  if (!selectedDay) return;
-  
-  const noteInput = document.getElementById('noteInput');
-  const note = noteInput.value.trim();
-  
-  const dayData = state.days[selectedDay.dateKey] || {};
-  
-  if (note) {
-    dayData.note = note;
-  } else {
-    delete dayData.note;
-  }
-  
-  if (Object.keys(dayData).length === 0) {
-    delete state.days[selectedDay.dateKey];
-  } else {
-    state.days[selectedDay.dateKey] = dayData;
-  }
-  
-  saveState();
-  renderGrid();
-  
-  // Close the popup after saving
-  closePopup();
-}
 
 function updateCharCount() {
   const noteInput = document.getElementById('noteInput');
@@ -569,14 +548,7 @@ function updateCharCount() {
   charCount.textContent = noteInput.value.length;
 }
 
-function clearMarking() {
-  if (!selectedDay) return;
-  
-  delete state.days[selectedDay.dateKey];
-  saveState();
-  renderGrid();
-  closePopup();
-}
+
 
 // ===========================
 // Settings Functions
@@ -613,12 +585,7 @@ function initEventListeners() {
   });
   
   // Note functionality
-  document.getElementById('addNoteBtn').addEventListener('click', showNoteInput);
-  document.getElementById('saveNoteBtn').addEventListener('click', saveNote);
   document.getElementById('noteInput').addEventListener('input', updateCharCount);
-  
-  // Clear button
-  document.getElementById('clearBtn').addEventListener('click', clearMarking);
   
   // Export/Import
   document.getElementById('exportBtn').addEventListener('click', () => {
