@@ -376,11 +376,13 @@ body {
   border-radius: 50%;
   border: 3px solid transparent;
   cursor: pointer;
-  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.color-option:hover {
-  transform: scale(1.15);
+@media (hover: hover) {
+  .color-option:hover {
+    transform: scale(1.15);
+  }
 }
 
 .color-option.selected {
