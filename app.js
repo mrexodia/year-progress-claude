@@ -654,6 +654,16 @@ function initEventListeners() {
   });
 }
 
+function scrollToToday() {
+  const currentYear = new Date().getFullYear();
+  if (state.year !== currentYear) return;
+  
+  const todayDot = document.querySelector('.day-dot.today');
+  if (todayDot) {
+    todayDot.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
 // ===========================
 // Initialization
 // ===========================
@@ -669,6 +679,9 @@ function init() {
   renderProgress();
   renderGrid();
   initEventListeners();
+  
+  // Scroll to current day if viewing current year
+  scrollToToday();
   
   // Register service worker
   if ('serviceWorker' in navigator) {
