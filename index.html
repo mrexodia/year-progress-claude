@@ -114,12 +114,10 @@
         <!-- Data section -->
         <div class="settings-section">
           <h3>Your Data</h3>
-          <button class="settings-btn-action" id="exportBtn">
-            <span>💾</span> Download Backup
-          </button>
-          <button class="settings-btn-action" id="importBtn">
-            <span>📂</span> Restore from Backup
-          </button>
+          <div class="data-buttons">
+            <button class="data-btn" id="exportBtn">Backup</button>
+            <button class="data-btn" id="importBtn">Restore</button>
+          </div>
           <input type="file" id="importInput" accept=".json" style="display: none;">
         </div>
       </div>
